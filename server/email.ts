@@ -26,9 +26,10 @@ interface BookingData {
 }
 
 
-const BREVO_API_KEY = process.env.BREVO_API_KEY;
+// Use API key if available, otherwise disable email sending
+const BREVO_API_KEY = process.env.BREVO_API_KEY || null;
 if (!BREVO_API_KEY) {
-  throw new Error("BREVO_API_KEY environment variable is required");
+  console.warn("❌ BREVO_API_KEY not set. Email sending is disabled for now.");
 }
 // IMPORTANT: The sender email MUST be verified in your Brevo account
 // Using verified sender: rankunda48@gmail.com
@@ -339,24 +340,24 @@ function generateConfirmationEmail(data: BookingData): string {
 
 /**
  * Send booking notification to admin
+ * Returns full send result so callers can inspect errors/messageId.
  */
-export async function sendBookingNotification(data: BookingData): Promise<boolean> {
+export async function sendBookingNotification(data: BookingData): Promise<{success: boolean; messageId?: string; error?: string}> {
   const subject = `New ${data.type === "vehicle" ? "Car Hire" : "Tour"} Booking Request - ${data.itemName}`;
   const htmlContent = generateBookingNotificationEmail(data);
   
-  const result = await sendEmail(BREVO_TO_EMAIL, subject, htmlContent);
-  return result.success;
+  return await sendEmail(BREVO_TO_EMAIL, subject, htmlContent);
 }
 
 /**
  * Send confirmation email to customer
+ * Returns full send result so callers can inspect errors/messageId.
  */
-export async function sendBookingConfirmation(data: BookingData): Promise<boolean> {
+export async function sendBookingConfirmation(data: BookingData): Promise<{success: boolean; messageId?: string; error?: string}> {
   const subject = `Booking Request Received - Pathway Expeditions Uganda`;
   const htmlContent = generateConfirmationEmail(data);
   
-  const result = await sendEmail(data.email, subject, htmlContent);
-  return result.success;
+  return await sendEmail(data.email, subject, htmlContent);
 }
 
 /**
@@ -369,30 +370,17 @@ export async function sendBookingEmails(data: BookingData): Promise<{ notificati
   ]);
 
   const errors: { notification?: string; confirmation?: string } = {};
-  
-  // Get detailed error info
-  const notificationEmailResult = await sendEmail(
-    BREVO_TO_EMAIL, 
-    `New ${data.type === "vehicle" ? "Car Hire" : "Tour"} Booking Request - ${data.itemName}`,
-    generateBookingNotificationEmail(data)
-  );
-  
-  const confirmationEmailResult = await sendEmail(
-    data.email,
-    `Booking Request Received - Pathway Expeditions Uganda`,
-    generateConfirmationEmail(data)
-  );
 
-  if (!notificationEmailResult.success) {
-    errors.notification = notificationEmailResult.error;
+  if (!notificationResult.success) {
+    errors.notification = notificationResult.error;
   }
-  if (!confirmationEmailResult.success) {
-    errors.confirmation = confirmationEmailResult.error;
+  if (!confirmationResult.success) {
+    errors.confirmation = confirmationResult.error;
   }
 
   return { 
-    notification: notificationResult, 
-    confirmation: confirmationResult,
+    notification: notificationResult.success, 
+    confirmation: confirmationResult.success,
     errors: Object.keys(errors).length > 0 ? errors : undefined
   };
 }

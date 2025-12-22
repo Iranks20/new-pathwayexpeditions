@@ -2,9 +2,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
 import FeatureCard from "@/components/FeatureCard";
+import ActivitiesSection from "@/components/ActivitiesSection";
 import { Award, Heart, Leaf, Users, TrendingUp, Globe } from "lucide-react";
 // Using available image as fallback
-import heroImage from "@assets/generated_images/Safaris-1.webp";
+// Using Cloudinary poster as fallback (original local asset missing)
+const heroImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg";
 // Video removed - not available, using image only
 
 const features = [
@@ -68,6 +70,8 @@ export default function AboutPage() {
           title="About Pathway Expeditions"
           subtitle="Where Every Journey Becomes a Story"
           backgroundImage={heroImage}
+          backgroundVideo="https://res.cloudinary.com/dnjdl9nuo/video/upload/v1766398641/vid_4_nfvmpo.mp4"
+          backgroundVideoParallax={0.7}
           primaryCta={{ label: "Explore Tours", href: "/tours" }}
           secondaryCta={{ label: "Contact Us", href: "#contact" }}
         />
@@ -115,30 +119,7 @@ export default function AboutPage() {
         </section>
 
         {/* Activities Section */}
-        <section className="py-16 md:py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-                Our Activities
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Explore our wide range of tailored tours and experiences
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {activities.map((activity) => (
-                <div
-                  key={activity.name}
-                  className="p-6 rounded-lg border bg-card hover-elevate transition-all duration-300"
-                >
-                  <h3 className="text-xl font-semibold mb-2">{activity.name}</h3>
-                  <p className="text-muted-foreground">{activity.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ActivitiesSection />
 
         {/* Why Choose Us Section */}
         <section className="py-16 md:py-24 bg-muted/30">

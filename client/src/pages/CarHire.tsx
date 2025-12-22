@@ -6,8 +6,8 @@ import CarHireHighlights from "@/components/CarHireHighlights";
 import CarHireSupportSection from "@/components/CarHireSupportSection";
 import CarHireFAQSection from "@/components/CarHireFAQSection";
 import TrustBadges from "@/components/TrustBadges";
-// Using available image as fallback
-import carHero from "@assets/generated_images/land rover defender.jpg";
+// Using Cloudinary poster as fallback (original local asset missing)
+const carHero = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399335/Land_rover_dzstse.jpg";
 
 export default function CarHirePage() {
   return (

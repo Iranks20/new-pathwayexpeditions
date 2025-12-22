@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 
 interface Cta {
@@ -22,13 +23,34 @@ export default function PageHero({
   backgroundVideo,
   primaryCta,
   secondaryCta,
-}: PageHeroProps) {
+  backgroundVideoParallax = 0.7,
+}: PageHeroProps & { backgroundVideoParallax?: number }) {
+  const [scrollY, setScrollY] = React.useState(0);
+
+  React.useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <section className="relative min-h-[420px] md:min-h-[520px] flex items-center justify-center overflow-hidden">
       {backgroundVideo ? (
         <div className="absolute inset-0">
           <video
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover will-change-transform"
+            style={{ transform: `translateY(${scrollY * backgroundVideoParallax}px)` }}
             src={backgroundVideo}
             autoPlay
             muted

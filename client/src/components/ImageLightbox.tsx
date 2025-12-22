@@ -1,6 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cloudinaryOptimize, cloudinaryPlaceholder } from "@/lib/utils";
+
+function AsyncImage({ src, alt }: { src: string; alt?: string }) {
+  const [loaded, setLoaded] = useState(false);
+  const [placeholderLoaded, setPlaceholderLoaded] = useState(false);
+  const placeholder = cloudinaryPlaceholder(src);
+  const full = cloudinaryOptimize(src, 1600);
+
+  return (
+    <div className="relative">
+      <img
+        src={placeholder}
+        alt={alt}
+        className={`max-h-[90vh] max-w-[90vw] object-contain filter blur-sm transition-opacity duration-300 ${placeholderLoaded && !loaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setPlaceholderLoaded(true)}
+      />
+      <img
+        src={full}
+        alt={alt}
+        className={`absolute left-0 top-0 max-h-[90vh] max-w-[90vw] object-contain transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setLoaded(true)}
+      />
+    </div>
+  );
+}
 
 interface Props {
   images: string[];
@@ -20,6 +45,18 @@ export default function ImageLightbox({ images, open, initialIndex = 0, onOpenCh
 
   useEffect(() => {
     if (onIndexChange) onIndexChange(index);
+
+    // prefetch neighbor images for faster navigation
+    const preload = (url?: string) => {
+      if (!url) return;
+      const img = new Image();
+      img.src = url;
+    };
+
+    const next = images[(index + 1) % images.length];
+    const prev = images[(index - 1 + images.length) % images.length];
+    preload(next);
+    preload(prev);
   }, [index]);
 
   useEffect(() => {
@@ -63,7 +100,7 @@ export default function ImageLightbox({ images, open, initialIndex = 0, onOpenCh
             {images[index].endsWith('.mp4') || images[index].endsWith('.webm') ? (
               <video src={images[index]} className="max-h-[90vh] max-w-[90vw] object-contain" controls autoPlay playsInline />
             ) : (
-              <img src={images[index]} alt={`Image ${index + 1}`} className="max-h-[90vh] max-w-[90vw] object-contain" />
+              <AsyncImage src={images[index]} alt={`Image ${index + 1}`} />
             )}
             <button
               onClick={() => setIndex((i) => (i === images.length - 1 ? 0 : i + 1))}

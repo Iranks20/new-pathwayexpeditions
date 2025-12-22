@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Compass, Car, Star } from "lucide-react";
 import { useEffect, useState } from "react";
-import heroImage from "@assets/generated_images/Safaris-1.webp";
-// Video removed - not available, using image background
+const VIDEO_BG = "https://res.cloudinary.com/dnjdl9nuo/video/upload/v1766327163/home_1_fqnaas.mp4";
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
@@ -26,13 +25,16 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-[600px] md:min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Parallax */}
-      <div
-        className="absolute top-0 left-0 w-full h-full will-change-transform overflow-hidden bg-cover bg-center"
-        style={{ 
-          transform: `translateY(${scrollY * 0.7}px)`,
-          backgroundImage: `url(${heroImage})`
-        }}
+      {/* Background Video with Parallax */}
+      <video
+        className="absolute top-0 left-0 w-full h-full will-change-transform object-cover"
+        style={{ transform: `translateY(${scrollY * 0.7}px)` }}
+        src={VIDEO_BG}
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden="true"
       />
 
       {/* Gradient Overlay */}

@@ -1,29 +1,68 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { LucideIcon, ChevronRight, ChevronLeft, Maximize2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useInView } from "@/lib/useInView";
+import { cloudinaryOptimize, cloudinaryPlaceholder, prefetchImage } from "@/lib/utils"; 
 
 interface ActivityCardProps {
   icon: LucideIcon;
   title: string;
   description: string;
-  images?: string[];
+  images?: string[]; // small/thumbnail images
+  fullImages?: string[]; // larger images for lightbox/prefetch
   onOpen?: (index?: number) => void;
   initialIndex?: number;
   folderName?: string;
 }
 
-export default function ActivityCard({ icon: Icon, title, description, images, onOpen, initialIndex = 0, folderName }: ActivityCardProps) {
+export default function ActivityCard({ icon: Icon, title, description, images, fullImages, onOpen, initialIndex = 0, folderName }: ActivityCardProps) {
   const [index, setIndex] = useState(initialIndex ?? 0);
   useEffect(() => {
     setIndex(initialIndex ?? 0);
   }, [initialIndex]);
+
+  // lazy load main image when card is in view
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const { ref: inViewRef, inView } = useInView<HTMLDivElement>({ rootMargin: "200px" });
+  // combine refs
+  wrapperRef.current = (inViewRef as any).current ?? wrapperRef.current;
+
   const thumbnail = images && images.length > 0 ? images[index] : undefined;
+  const [loadedSrc, setLoadedSrc] = useState<string | undefined>(undefined);
+  const [placeholderSrc, setPlaceholderSrc] = useState<string | undefined>(undefined);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [placeholderLoaded, setPlaceholderLoaded] = useState(false);
+
+  useEffect(() => {
+    if (thumbnail) {
+      // set placeholder immediately
+      setPlaceholderSrc(cloudinaryPlaceholder(thumbnail));
+    }
+  }, [thumbnail]);
+
+  useEffect(() => {
+    if (!thumbnail || !inView) return;
+    // optimize thumbnail size and set it when visible
+    setLoadedSrc(cloudinaryOptimize(thumbnail, 480));
+  }, [thumbnail, inView]);
+
+  // prefetch next/prev full images when index changes
+  useEffect(() => {
+    if (!fullImages || fullImages.length === 0) return;
+    const next = fullImages[(index + 1) % fullImages.length];
+    const prev = fullImages[(index - 1 + fullImages.length) % fullImages.length];
+    if (next) prefetchImage(cloudinaryOptimize(next, 1600));
+    if (prev) prefetchImage(cloudinaryOptimize(prev, 1600));
+  }, [index, fullImages]);
+
   // Debugging: simple card log during development
   if (process.env.NODE_ENV !== "production") {
-    console.debug(`ActivityCard: ${title} thumbnail:`, thumbnail, "folder:", folderName);
+    console.debug(`ActivityCard: ${title} thumbnail:`, thumbnail, "folder:", folderName, "loaded:", !!loadedSrc);
   }
+
   return (
     <Card
+      ref={inViewRef as any}
       className="group hover-elevate active-elevate-2 transition-all duration-300 cursor-pointer border-0 shadow-md hover:shadow-xl overflow-visible"
       // Card no longer opens the gallery on whole click; only via the open button or image click if desired
       data-testid={`card-activity-${title.toLowerCase().replace(/\s+/g, "-")}`}
@@ -32,14 +71,34 @@ export default function ActivityCard({ icon: Icon, title, description, images, o
       <CardContent className="p-0 text-center">
         <div className="mb-0 relative h-36 w-full overflow-hidden">
           {thumbnail ? (
-            <img
-              src={thumbnail}
-              alt={title}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-              aria-hidden
-              onClick={(e) => { e.stopPropagation(); onOpen && onOpen(index); }}
-            />
+            <>
+              {/* Placeholder (small, blurred) */}
+              {placeholderSrc && (
+                <img
+                  src={placeholderSrc}
+                  alt={`${title} placeholder`}
+                  className={`absolute inset-0 w-full h-full object-cover filter blur-sm scale-105 transition-opacity duration-300 ${placeholderLoaded && !isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  onLoad={() => setPlaceholderLoaded(true)}
+                  aria-hidden
+                />
+              )}
+
+              {/* Loading skeleton (visible until placeholder appears) */}
+              {!placeholderLoaded && (
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 animate-pulse" />
+              )}
+
+              {/* Main image fades in when loaded */}
+              <img
+                src={loadedSrc ?? undefined}
+                alt={title}
+                loading="lazy"
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                aria-hidden
+                onLoad={() => setIsLoaded(true)}
+                onClick={(e) => { e.stopPropagation(); onOpen && onOpen(index); }}
+              />
+            </>
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5" />
           )}
@@ -103,7 +162,7 @@ export default function ActivityCard({ icon: Icon, title, description, images, o
                   className={`w-8 h-8 rounded overflow-hidden border-2 ${index === i ? 'border-white' : 'border-transparent'}`}
                   onClick={(e) => { e.stopPropagation(); setIndex(i); }}
                 >
-                  <img src={src} alt={`thumb-${i}`} className="w-full h-full object-cover" />
+                  <img src={cloudinaryOptimize(src, 120)} alt={`thumb-${i}`} loading="lazy" className="w-full h-full object-cover" />
                 </button>
               ))}
               {images.length > 4 && (

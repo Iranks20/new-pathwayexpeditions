@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
+import OptimizedImage from "./OptimizedImage";
 
 interface DestinationCardProps {
   name: string;
@@ -13,14 +14,13 @@ export default function DestinationCard({ name, description, image }: Destinatio
       className="relative overflow-hidden h-80 group cursor-pointer hover-elevate transition-all duration-500 border-0 shadow-lg hover:shadow-2xl"
       data-testid={`card-destination-${name.toLowerCase().replace(/\s+/g, "-")}`}
     >
-      {/* Render a video if the asset is a video file, otherwise use background image */}
+      {/* Render a video if the asset is a video file, otherwise use OptimizedImage */}
       {typeof image === "string" && (image.endsWith('.mp4') || image.endsWith('.webm')) ? (
         <video className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={image} autoPlay loop muted playsInline />
       ) : (
-        <div 
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-          style={{ backgroundImage: `url(${image})` }}
-        />
+        <div className="absolute inset-0">
+          <OptimizedImage src={image} alt={name} widthHint={1200} className="w-full h-full" />
+        </div>
       )}
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20 group-hover:from-black/95 transition-all duration-500" />

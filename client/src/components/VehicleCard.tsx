@@ -6,6 +6,7 @@ import { Users, Briefcase, Gauge, Fuel, Eye, Star, CheckCircle2, XCircle } from 
 import { usdToUgx, formatUgx, cn } from "@/lib/utils";
 import BookingDialog from "./BookingDialog";
 import VehicleDetailDialog from "./VehicleDetailDialog";
+import OptimizedImage from "./OptimizedImage";
 
 export interface VehicleData {
   name: string;

@@ -4,61 +4,61 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Link } from "wouter";
 
-// Cultural Heritage - using available images as fallbacks
-import culturalHero from "@assets/generated_images/luwombo.jpg";
-import luwombo from "@assets/generated_images/luwombo.jpg";
-// Using available images for cultural gallery
-import cultural1 from "@assets/generated_images/luwombo.jpg";
-import cultural3 from "@assets/generated_images/luwombo.jpg";
-import cultural4 from "@assets/generated_images/luwombo.jpg";
-import cultural5 from "@assets/generated_images/luwombo.jpg";
-import cultural6 from "@assets/generated_images/luwombo.jpg";
-import cultural7 from "@assets/generated_images/luwombo.jpg";
+// Cultural Heritage - using Cloudinary fallbacks (local assets moved)
+const culturalHero = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg";
+const luwombo = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg";
+// Using Cloudinary images for cultural gallery
+const cultural1 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg";
+const cultural3 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339800/culture_7_omaddc.jpg";
+const cultural4 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339798/culture_3_tvcrjs.jpg";
+const cultural5 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339785/culture_8_da4cz8.jpg";
+const cultural6 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339769/culture_1_tq1far.jpg";
+const cultural7 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339802/culture_2_niunfh.jpg";
 
-// Gorilla Trekking - using available images
-import gorilla1 from "@assets/generated_images/img1.webp";
-import gorilla2 from "@assets/generated_images/img2.webp";
-import gorilla3 from "@assets/generated_images/img4.webp";
-import gorilla4 from "@assets/generated_images/img5.webp";
-import gorilla5 from "@assets/generated_images/Safaris-1.webp";
-import gorilla6 from "@assets/generated_images/pic3.webp";
-import gorilla7 from "@assets/generated_images/pic4.webp";
+// Gorilla Trekking - using Cloudinary fallbacks
+const gorilla1 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339399/gorilla_7_xrnim5.jpg";
+const gorilla2 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339392/gorilla_8_exuo6a.jpg";
+const gorilla3 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339380/gorilla_3_btjdfk.jpg";
+const gorilla4 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339366/gorilla_26_vpfime.jpg";
+const gorilla5 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg";
+const gorilla6 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339365/gorilla_4_rno9ax.jpg";
+const gorilla7 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339364/gorilla_5_pwi1df.jpg";
 
-// 13 Day Uganda Adventure - using available images
-import uganda13_1 from "@assets/generated_images/1.webp";
-import uganda13_2 from "@assets/generated_images/2.webp";
-import uganda13_3 from "@assets/generated_images/3.webp";
-import uganda13_4 from "@assets/generated_images/4.jpg";
-import uganda13_5 from "@assets/generated_images/5.jpg";
-import uganda13_6 from "@assets/generated_images/pic2.jpg";
-import uganda13_7 from "@assets/generated_images/pic5.jpg";
+// 13 Day Uganda Adventure - Cloudinary fallbacks
+const uganda13_1 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg";
+const uganda13_2 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340944/nature_walks_3_edkqjc.jpg";
+const uganda13_3 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340944/nature_walks_1_z3f1q3.jpg";
+const uganda13_4 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340943/nature_walks_5_ajbevw.jpg";
+const uganda13_5 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340939/nature_walks_4_mhiim4.jpg";
+const uganda13_6 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg";
+const uganda13_7 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340944/nature_walks_3_edkqjc.jpg";
 
-// 15 Day Great Uganda Safari - using available images
-import uganda15_1 from "@assets/generated_images/vic1.webp";
-import uganda15_2 from "@assets/generated_images/vic2.webp";
-import uganda15_3 from "@assets/generated_images/vic3.webp";
-import uganda15_4 from "@assets/generated_images/vic4.webp";
-import uganda15_5 from "@assets/generated_images/vic5.webp";
-import uganda15_6 from "@assets/generated_images/falls1.webp";
-import uganda15_7 from "@assets/generated_images/falls3.webp";
+// 15 Day Great Uganda Safari - Cloudinary fallbacks
+const uganda15_1 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338693/wildlife_13_slttqx.jpg";
+const uganda15_2 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338693/wildlife_13_slttqx.jpg";
+const uganda15_3 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338693/wildlife_13_slttqx.jpg";
+const uganda15_4 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338693/wildlife_13_slttqx.jpg";
+const uganda15_5 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338693/wildlife_13_slttqx.jpg";
+const uganda15_6 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg";
+const uganda15_7 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340943/nature_walks_5_ajbevw.jpg";
 
-// Murchison Falls Explorer - using available images
-import falls1 from "@assets/generated_images/falls1.webp";
-import falls2 from "@assets/generated_images/falls3.webp";
-import falls3 from "@assets/generated_images/falls4.webp";
-import falls4 from "@assets/generated_images/falls 5.webp";
-import falls5 from "@assets/generated_images/OIP.webp";
-import falls6 from "@assets/generated_images/download.webp";
-import falls7 from "@assets/generated_images/tomb.jpg";
+// Murchison Falls Explorer - Cloudinary fallbacks
+const falls1 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg";
+const falls2 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340943/nature_walks_5_ajbevw.jpg";
+const falls3 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340944/nature_walks_1_z3f1q3.jpg";
+const falls4 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340944/nature_walks_3_edkqjc.jpg";
+const falls5 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340939/nature_walks_4_mhiim4.jpg";
+const falls6 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg";
+const falls7 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg";
 
-// Lake Victoria Experience - using available images
-import vic1 from "@assets/generated_images/vic1.webp";
-import vic2 from "@assets/generated_images/vic2.webp";
-import vic3 from "@assets/generated_images/vic3.webp";
-import vic4 from "@assets/generated_images/vic4.webp";
-import vic5 from "@assets/generated_images/vic5.webp";
-import vic6 from "@assets/generated_images/vic1.webp";
-import vic7 from "@assets/generated_images/vic2.webp";
+// Lake Victoria Experience - Cloudinary fallbacks
+const vic1 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340724/boat_13_rtn8wm.jpg";
+const vic2 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340716/boat_10_kw2jqg.jpg";
+const vic3 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340713/boat_18_py0y6x.jpg";
+const vic4 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340707/boat_16_phxhlt.jpg";
+const vic5 = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340701/boat_15_hyxe9c.jpg";
+const vic6 = vic1;
+const vic7 = vic2;
 
 const allTours = [
   {
@@ -66,9 +66,15 @@ const allTours = [
     location: "Central Uganda",
     duration: "5 Days",
     price: 1250,
-    // add luwombo as the new first image and make it primary
-    image: luwombo,
-    images: [luwombo, cultural1, cultural3, cultural4, cultural5, cultural6, cultural7],
+    // replaced with Cloudinary images as requested
+    image: "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg",
+    images: [
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339800/culture_7_omaddc.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339798/culture_3_tvcrjs.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339785/culture_8_da4cz8.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339769/culture_1_tq1far.jpg",
+    ],
     description: "Immerse yourself in Uganda's rich cultural traditions, local communities, and authentic experiences.",
     groupSize: "4-10 people"
   },
@@ -77,8 +83,14 @@ const allTours = [
     location: "Bwindi Forest, Uganda",
     duration: "3 Days",
     price: 1999,
-    image: gorilla1,
-    images: [gorilla1, gorilla2, gorilla3, gorilla4, gorilla5, gorilla6, gorilla7],
+    image: "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339399/gorilla_7_xrnim5.jpg",
+    images: [
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339399/gorilla_7_xrnim5.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339392/gorilla_8_exuo6a.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339380/gorilla_3_btjdfk.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339366/gorilla_26_vpfime.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339365/gorilla_4_rno9ax.jpg",
+    ],
     description: "Journey through misty rainforests for a rare glimpse of mountain gorillas in their natural habitat.",
     groupSize: "2-8 people"
   },
@@ -87,8 +99,14 @@ const allTours = [
     location: "Multiple Destinations, Uganda",
     duration: "13 Days",
     price: 6495,
-    image: uganda13_1,
-    images: [uganda13_1, uganda13_2, uganda13_3, uganda13_4, uganda13_5, uganda13_6, uganda13_7],
+    image: "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg",
+    images: [
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340944/nature_walks_3_edkqjc.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340944/nature_walks_1_z3f1q3.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340943/nature_walks_5_ajbevw.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340939/nature_walks_4_mhiim4.jpg",
+    ],
     description: "Experience the best of Uganda with wildlife safaris, gorilla trekking, and cultural encounters.",
     groupSize: "4-12 people"
   },
@@ -97,9 +115,14 @@ const allTours = [
     location: "Uganda Circuit",
     duration: "15 Days",
     price: 4385,
-    // remove first image and use the next image as primary
-    image: uganda15_2,
-    images: [uganda15_2, uganda15_3, uganda15_4, uganda15_5, uganda15_6, uganda15_7],
+    image: "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338693/wildlife_13_slttqx.jpg",
+    images: [
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338693/wildlife_13_slttqx.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338690/wildlife_12_umcnzx.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338681/wildlife_6_vlpi8q.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338680/wildlife_5_hro0ta.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338675/wildlife_10_ckkxb5.jpg",
+    ],
     description: "Comprehensive safari adventure covering Uganda's most iconic national parks and wildlife reserves.",
     groupSize: "6-15 people"
   },
@@ -108,9 +131,14 @@ const allTours = [
     location: "Murchison Falls NP",
     duration: "4 Days",
     price: 1850,
-    // remove first image and use the next as primary
-    image: falls2,
-    images: [falls2, falls3, falls4, falls5, falls6, falls7],
+    image: "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340677/boat_8_apoiyf.jpg",
+    images: [
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340677/boat_8_apoiyf.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340676/boat_11_gxfdi7.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340672/boat_1_jkgudg.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340670/boat_6_ibtlkq.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340669/boat_9_uyv9rl.jpg",
+    ],
     description: "Witness the world's most powerful waterfall and encounter diverse wildlife in Uganda's largest park.",
     groupSize: "2-8 people"
   },
@@ -119,8 +147,14 @@ const allTours = [
     location: "Lake Victoria",
     duration: "3 Days",
     price: 980,
-    image: vic1,
-    images: [vic1, vic2, vic3, vic4, vic5, vic6, vic7],
+    image: "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340655/boat_4_sf2x2s.jpg",
+    images: [
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340655/boat_4_sf2x2s.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340641/boat_7_jvpz7h.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340640/boat_3_fn6wbe.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340631/boat_5_cw4s2x.jpg",
+      "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340625/boat_2_gjwhc4.jpg",
+    ],
     description: "Explore Africa's largest lake with island hopping, fishing villages, and serene boat cruises.",
     groupSize: "2-6 people"
   }

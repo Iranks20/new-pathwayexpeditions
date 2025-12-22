@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -65,6 +66,15 @@ export default function CarHireRatesPage() {
     <div className="min-h-screen bg-background">
       <Header forceDark />
       <main className="pt-16">
+        <PageHero
+          title="Car Hire Rates"
+          subtitle="Entebbe airport transfer & car hire tariff guide"
+          backgroundImage={"https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338865/wildlife_33_vq2dgg.jpg"}
+          backgroundVideo="https://res.cloudinary.com/dnjdl9nuo/video/upload/v1766398593/vid_1_cntt9e.mp4"
+          backgroundVideoParallax={0.7}
+          primaryCta={{ label: "Reserve a Vehicle", href: "/car-hire" }}
+        />
+
         <section className="py-12 md:py-16 bg-muted/40 border-b">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
             <p className="text-sm uppercase tracking-wider text-muted-foreground">Airport Transfer Tariffs</p>

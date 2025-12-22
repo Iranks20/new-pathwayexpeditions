@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Users, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import ImageLightbox from "@/components/ImageLightbox";
 import BookingDialog from "./BookingDialog";
+import OptimizedImage from "./OptimizedImage";
 
 interface TourCardProps {
   title: string;
@@ -108,10 +109,11 @@ export default function TourCard({
     <>
       <Card className="overflow-hidden hover-elevate transition-all duration-300 cursor-pointer group h-full flex flex-col" data-testid={`card-tour-${title.toLowerCase().replace(/\s+/g, "-")}`}>
         <div className="relative h-56 overflow-hidden" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
-          <img 
-            src={currentImage} 
+          <OptimizedImage
+            src={currentImage}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            widthHint={1200}
+            className="w-full h-full"
             onClick={openLightbox}
           />
           

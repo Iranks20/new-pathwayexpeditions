@@ -6,16 +6,21 @@ import { Label } from "@/components/ui/label";
 import { useState, useMemo } from "react";
 import { X } from "lucide-react";
 import { usdToUgx, formatUgx } from "@/lib/utils";
-// Using available images as fallbacks
-import landCruiserImage from "@assets/generated_images/land rover defender.jpg";
-import nissanPatrolImage from "@assets/generated_images/ford ranger wild truck.jpg";
-import rav4Image from "@assets/generated_images/Safaris-1.webp";
-import maverickImage from "@assets/generated_images/img1.webp";
-import sprinterImage from "@assets/generated_images/marcedes splinter.jpg";
-import hiaceImage from "@assets/generated_images/img2.webp";
-import landRoverDefenderImage from "@assets/generated_images/land rover defender.jpg";
-import fordRangerImage from "@assets/generated_images/ford ranger wild truck.jpg";
-import mercedesSprinterImage from "@assets/generated_images/marcedes splinter.jpg";
+// Fallbacks sourced from Cloudinary (local assets removed)
+const landCruiserImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399350/Toyota_land_cruiser_oczacp.jpg";
+const nissanPatrolImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399349/Nissan_patrol_yw0pe6.jpg";
+const rav4Image = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399378/Toyota_RAV_4_x2xplj.jpg"; // fallback poster (cloudinary)
+const maverickImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766338693/wildlife_13_slttqx.jpg";
+const sprinterImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399343/Mercedes_Sprinter_fs90iw.jpg";
+const hiaceImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg";
+const landRoverDefenderImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399335/Land_rover_dzstse.jpg";
+const fordRangerImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399336/Ford_ranger_zbfq3n.jpg";
+const mercedesSprinterImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399343/Mercedes_Sprinter_fs90iw.jpg";
+
+// Selected Cloudinary images (only for these three vehicles)
+const MERCEDES_SPRINTER_URL = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399343/Mercedes_Sprinter_fs90iw.jpg";
+const LAND_ROVER_URL = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399335/Land_rover_dzstse.jpg";
+const TOYOTA_LANDCRUISER_URL = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399350/Toyota_land_cruiser_oczacp.jpg";
 
 const vehicles: VehicleData[] = [
   {
@@ -26,9 +31,9 @@ const vehicles: VehicleData[] = [
     transmission: "Automatic",
     fuelType: "Diesel",
     dailyRate: 75,
-    image: landCruiserImage,
+    image: TOYOTA_LANDCRUISER_URL,
     features: ["AC", "GPS", "4WD", "Full Insurance", "Roof Rack", "Spare Tire"],
-    gallery: [landCruiserImage, nissanPatrolImage, rav4Image],
+    gallery: [TOYOTA_LANDCRUISER_URL, nissanPatrolImage, rav4Image],
     rates: { daily: 75, weekly: 450, monthly: 1575 },
     mileageLimit: "250 km per day",
     fuelPolicy: "Full-to-full",
@@ -117,9 +122,9 @@ const vehicles: VehicleData[] = [
     transmission: "Manual",
     fuelType: "Diesel",
     dailyRate: 50,
-    image: landRoverDefenderImage,
+    image: LAND_ROVER_URL,
     features: ["AC", "GPS", "4WD", "Roof Tent", "Recovery Kit", "Insurance"],
-    gallery: [landRoverDefenderImage, rav4Image, nissanPatrolImage],
+    gallery: [LAND_ROVER_URL, rav4Image, nissanPatrolImage],
     rates: { daily: 50, weekly: 300, monthly: 1050 },
     mileageLimit: "250 km per day",
     fuelPolicy: "Full-to-full",
@@ -177,9 +182,9 @@ const vehicles: VehicleData[] = [
     transmission: "Automatic",
     fuelType: "Diesel",
     dailyRate: 75,
-    image: mercedesSprinterImage,
+    image: MERCEDES_SPRINTER_URL,
     features: ["Reclining Seats", "Onboard Wi-Fi", "Climate Control", "TV Screen", "Insurance"],
-    gallery: [mercedesSprinterImage, hiaceImage],
+    gallery: [MERCEDES_SPRINTER_URL, hiaceImage],
     rates: { daily: 75, weekly: 450, monthly: 1575 },
     mileageLimit: "180 km per day",
     fuelPolicy: "Full-to-full",

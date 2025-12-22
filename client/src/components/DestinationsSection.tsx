@@ -1,11 +1,11 @@
 import DestinationCard from "./DestinationCard";
-// Using available images as fallbacks
-import fallsImage from "@assets/generated_images/falls1.webp";
-import elephantImage from "@assets/generated_images/Safaris-1.webp";
-import springImage from "@assets/generated_images/vic1.webp";
-import tombAsset from "@assets/generated_images/tomb.jpg";
-import lakeImage from "@assets/generated_images/vic2.webp";
-import gorillaImage from "@assets/generated_images/img1.webp";
+// Using Cloudinary fallbacks (local assets removed or relocated)
+const fallsImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg";
+const elephantImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg";
+const springImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340963/nature_walks_6_i6mprd.jpg";
+const tombAsset = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339801/culture_9_fxgtyw.jpg"; // fallback for tomb
+const lakeImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766340716/boat_10_kw2jqg.jpg";
+const gorillaImage = "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766339399/gorilla_7_xrnim5.jpg";
 
 // Using available images directly
 const springVideo = springImage;
@@ -17,7 +17,7 @@ const destinations = [
   {
     name: "Western Uganda",
     description: "A land of iconic safaris and stunning natural wonders.",
-    image: springVideo
+    image: "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399406/western_ecu2bm.jpg"
   },
   {
     name: "Central Uganda",
@@ -27,12 +27,12 @@ const destinations = [
   {
     name: "Eastern Uganda",
     description: "Discover Mount Elgon and the source of the Nile River.",
-    image: elgonVideo
+    image: "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399388/eastern_er2hzf.jpg"
   },
   {
     name: "Northern Uganda",
     description: "Home of the majestic gorillas and breathtaking rolling hills.",
-    image: gorillaVideo
+    image: "https://res.cloudinary.com/dnjdl9nuo/image/upload/v1766399390/northern_sen4qp.jpg"
   }
 ];
 
