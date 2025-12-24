@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import OptimizedImage from "./OptimizedImage";
+import { cloudinaryVideoPoster } from "@/lib/utils";
 
 interface DestinationCardProps {
   name: string;
@@ -16,7 +17,16 @@ export default function DestinationCard({ name, description, image }: Destinatio
     >
       {/* Render a video if the asset is a video file, otherwise use OptimizedImage */}
       {typeof image === "string" && (image.endsWith('.mp4') || image.endsWith('.webm')) ? (
-        <video className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src={image} autoPlay loop muted playsInline />
+        <video 
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+          src={image} 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          preload="metadata"
+          poster={cloudinaryVideoPoster(image, 800)}
+        />
       ) : (
         <div className="absolute inset-0">
           <OptimizedImage src={image} alt={name} widthHint={1200} className="w-full h-full" />

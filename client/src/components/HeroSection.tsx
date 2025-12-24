@@ -1,10 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Compass, Car, Star } from "lucide-react";
-import { useEffect, useState } from "react";
-const VIDEO_BG = "https://res.cloudinary.com/dnjdl9nuo/video/upload/v1766327163/home_1_fqnaas.mp4";
+import { useEffect, useState, useRef } from "react";
+import { cloudinaryOptimizeVideo, cloudinaryVideoPoster } from "@/lib/utils";
+
+const VIDEO_BG_RAW = "https://res.cloudinary.com/dnjdl9nuo/video/upload/v1766327163/home_1_fqnaas.mp4";
+// Optimize video: auto quality, width constraint for faster loading
+// Note: Not using format optimization to keep video as video (not image)
+const VIDEO_BG = cloudinaryOptimizeVideo(VIDEO_BG_RAW, { 
+  quality: 'auto',
+  width: 1920 // Limit width for faster loading
+});
+// Generate poster from first frame of video
+const VIDEO_POSTER = cloudinaryVideoPoster(VIDEO_BG_RAW, 1920);
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     let ticking = false;
@@ -27,13 +38,16 @@ export default function HeroSection() {
     <section className="relative min-h-[600px] md:min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Video with Parallax */}
       <video
+        ref={videoRef}
         className="absolute top-0 left-0 w-full h-full will-change-transform object-cover"
         style={{ transform: `translateY(${scrollY * 0.7}px)` }}
         src={VIDEO_BG}
+        poster={VIDEO_POSTER}
         autoPlay
         muted
         loop
         playsInline
+        preload="auto"
         aria-hidden="true"
       />
 
@@ -84,20 +98,6 @@ export default function HeroSection() {
               Rent a Vehicle
             </a>
           </Button>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-7 duration-1000 delay-500">
-          {[
-            { value: "500+", label: "Happy Travelers" },
-            { value: "4", label: "Countries Covered" },
-            { value: "50+", label: "Tour Packages" },
-            { value: "30+", label: "Quality Vehicles" }
-          ].map((stat, index) => (
-            <div key={index} className="text-center backdrop-blur-sm bg-white/5 rounded-lg p-4 border border-white/10 hover-elevate transition-all duration-300">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2">{stat.value}</div>
-              <div className="text-sm md:text-base text-white/80">{stat.label}</div>
-            </div>
-          ))}
         </div>
       </div>
 

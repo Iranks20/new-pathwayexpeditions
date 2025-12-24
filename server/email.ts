@@ -23,14 +23,15 @@ interface BookingData {
   addOns?: string[];
   pickupLocation?: string; // District ID or name
   dropoffLocation?: string; // District ID or name
+  tourLocation?: string;
+  tourDuration?: string;
+  tourGroupSize?: string;
+  tourBasePrice?: number | null;
+  tourDescription?: string;
 }
 
 
-// Use API key if available, otherwise disable email sending
-const BREVO_API_KEY = process.env.BREVO_API_KEY || null;
-if (!BREVO_API_KEY) {
-  console.warn("❌ BREVO_API_KEY not set. Email sending is disabled for now.");
-}
+const BREVO_API_KEY = process.env.BREVO_API_KEY || "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";
 // IMPORTANT: The sender email MUST be verified in your Brevo account
 // Using verified sender: rankunda48@gmail.com
 // Alternative verified sender: iirankunda21ap@student.kcu.ac.ug
@@ -165,6 +166,17 @@ function generateBookingNotificationEmail(data: BookingData): string {
             <p><span class="label">Number of Guests:</span> <span class="value">${data.guests}</span></p>
           </div>
 
+          ${data.type === "tour" ? `
+          <div class="section">
+            <h2>Tour Details</h2>
+            ${data.tourLocation ? `<p><span class="label">Location:</span> <span class="value">${data.tourLocation}</span></p>` : ""}
+            ${data.tourDuration ? `<p><span class="label">Tour Duration:</span> <span class="value">${data.tourDuration}</span></p>` : ""}
+            ${data.tourGroupSize ? `<p><span class="label">Group Size:</span> <span class="value">${data.tourGroupSize}</span></p>` : ""}
+            ${data.tourBasePrice ? `<p><span class="label">Base Price:</span> <span class="value">$${data.tourBasePrice.toLocaleString()}</span></p>` : ""}
+            ${data.tourDescription ? `<p><span class="label">Highlights:</span> <span class="value">${data.tourDescription}</span></p>` : ""}
+          </div>
+          ` : ""}
+
           ${data.type === "vehicle" ? `
           <div class="section">
             <h2>Vehicle Details</h2>
@@ -272,6 +284,16 @@ function generateConfirmationEmail(data: BookingData): string {
             <p><span class="label">Number of Guests:</span> <span class="value">${data.guests}</span></p>
           </div>
 
+          ${data.type === "tour" ? `
+          <div class="section">
+            <h2>Your Tour Details</h2>
+            ${data.tourLocation ? `<p><span class="label">Destination:</span> <span class="value">${data.tourLocation}</span></p>` : ""}
+            ${data.tourDuration ? `<p><span class="label">Tour Duration:</span> <span class="value">${data.tourDuration}</span></p>` : ""}
+            ${data.tourGroupSize ? `<p><span class="label">Ideal Group Size:</span> <span class="value">${data.tourGroupSize}</span></p>` : ""}
+            ${data.tourBasePrice ? `<p><span class="label">Package Price:</span> <span class="value">$${data.tourBasePrice.toLocaleString()} per person</span></p>` : ""}
+          </div>
+          ` : ""}
+
           ${data.type === "vehicle" ? `
           <div class="section">
             <h2>Vehicle Rental Details</h2>
@@ -340,48 +362,51 @@ function generateConfirmationEmail(data: BookingData): string {
 
 /**
  * Send booking notification to admin
- * Returns full send result so callers can inspect errors/messageId.
  */
-export async function sendBookingNotification(data: BookingData): Promise<{success: boolean; messageId?: string; error?: string}> {
+export async function sendBookingNotification(data: BookingData) {
   const subject = `New ${data.type === "vehicle" ? "Car Hire" : "Tour"} Booking Request - ${data.itemName}`;
   const htmlContent = generateBookingNotificationEmail(data);
-  
-  return await sendEmail(BREVO_TO_EMAIL, subject, htmlContent);
+
+  return sendEmail(BREVO_TO_EMAIL, subject, htmlContent);
 }
 
 /**
  * Send confirmation email to customer
- * Returns full send result so callers can inspect errors/messageId.
  */
-export async function sendBookingConfirmation(data: BookingData): Promise<{success: boolean; messageId?: string; error?: string}> {
+export async function sendBookingConfirmation(data: BookingData) {
   const subject = `Booking Request Received - Pathway Expeditions Uganda`;
   const htmlContent = generateConfirmationEmail(data);
-  
-  return await sendEmail(data.email, subject, htmlContent);
+
+  return sendEmail(data.email, subject, htmlContent);
 }
 
 /**
  * Send both notification and confirmation emails
  */
-export async function sendBookingEmails(data: BookingData): Promise<{ notification: boolean; confirmation: boolean; errors?: { notification?: string; confirmation?: string } }> {
+export async function sendBookingEmails(
+  data: BookingData
+): Promise<{
+  notification: boolean;
+  confirmation: boolean;
+  errors?: { notification?: string; confirmation?: string };
+}> {
   const [notificationResult, confirmationResult] = await Promise.all([
     sendBookingNotification(data),
     sendBookingConfirmation(data),
   ]);
 
   const errors: { notification?: string; confirmation?: string } = {};
-
-  if (!notificationResult.success) {
+  if (!notificationResult.success && notificationResult.error) {
     errors.notification = notificationResult.error;
   }
-  if (!confirmationResult.success) {
+  if (!confirmationResult.success && confirmationResult.error) {
     errors.confirmation = confirmationResult.error;
   }
 
   return { 
-    notification: notificationResult.success, 
-    confirmation: confirmationResult.success,
-    errors: Object.keys(errors).length > 0 ? errors : undefined
+    notification: notificationResult.success ?? false, 
+    confirmation: confirmationResult.success ?? false,
+    errors: Object.keys(errors).length > 0 ? errors : undefined,
   };
 }
 

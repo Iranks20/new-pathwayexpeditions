@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { cloudinaryOptimizeVideo, cloudinaryVideoPoster } from "@/lib/utils";
 
 interface Cta {
   label: string;
@@ -25,9 +26,24 @@ export default function PageHero({
   secondaryCta,
   backgroundVideoParallax = 0.7,
 }: PageHeroProps & { backgroundVideoParallax?: number }) {
-  const [scrollY, setScrollY] = React.useState(0);
+  const [scrollY, setScrollY] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  React.useEffect(() => {
+  // Optimize video URL if it's from Cloudinary
+  const optimizedVideo = backgroundVideo 
+    ? (backgroundVideo.includes('cloudinary.com') 
+        ? cloudinaryOptimizeVideo(backgroundVideo, { quality: 'auto', width: 1920 })
+        : backgroundVideo)
+    : null;
+  
+  // Generate poster from video if no backgroundImage provided
+  const videoPoster = backgroundVideo && !backgroundImage
+    ? (backgroundVideo.includes('cloudinary.com') 
+        ? cloudinaryVideoPoster(backgroundVideo, 1920)
+        : undefined)
+    : backgroundImage;
+
+  useEffect(() => {
     let ticking = false;
 
     const handleScroll = () => {
@@ -44,21 +60,32 @@ export default function PageHero({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Preload video when component mounts
+  useEffect(() => {
+    if (videoRef.current && optimizedVideo) {
+      videoRef.current.load();
+    }
+  }, [optimizedVideo]);
+
   return (
     <section className="relative min-h-[420px] md:min-h-[520px] flex items-center justify-center overflow-hidden">
-      {backgroundVideo ? (
-        <div className="absolute inset-0">
-          <video
-            className="w-full h-full object-cover will-change-transform"
-            style={{ transform: `translateY(${scrollY * backgroundVideoParallax}px)` }}
-            src={backgroundVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={backgroundImage}
-          />
-        </div>
+      {optimizedVideo ? (
+        <>
+          <div className="absolute inset-0">
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover will-change-transform"
+              style={{ transform: `translateY(${scrollY * backgroundVideoParallax}px)` }}
+              src={optimizedVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster={videoPoster}
+            />
+          </div>
+        </>
       ) : backgroundImage ? (
         <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }} />
       ) : null}

@@ -63,9 +63,10 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           : "hover-elevate"
       )} data-testid={`card-vehicle-${name.toLowerCase().replace(/\s+/g, "-")}`}>
         <div className="relative h-40 sm:h-48 bg-muted overflow-hidden">
-          <img 
+          <OptimizedImage 
             src={image} 
             alt={name}
+            widthHint={800}
             className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex flex-col gap-2">
